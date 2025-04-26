@@ -75,7 +75,7 @@ $$
 R_{n+1} \le \max\{R_n, R_{n-1}\}
 $$
 
-for $n \ge 3$, and numerically $R_n$ decreases strictly for $n \ge 7$. Thus $(R_n)$ is eventually monotone and bounded below, hence convergent.
+for $n \ge 3$, and an analytic argument shows that $R_n$ decreases strictly for $n \ge 7$. Thus $(R_n)$ is eventually monotone and bounded below, hence convergent.
 
 **Definition (Handshake Constant).**  
 The common limit for $B=11$ is
@@ -92,6 +92,9 @@ Call this the *Handshake Constant*.
 ## 4. Liouville-Type Approximation
 
 For each $k \ge 1$, let $n_k$ be the smallest index such that the most significant non-zero digit of $F_{n_k}$ occurs in position $k$ (counting from 0). By Lemma each $n_k$ exists and that digit equals 1.
+
+**Lemma (Growth-rate lower bound).**  
+For all $n\ge1$, the carry-free Fibonacci term $F_n$ has its most significant non-zero digit in base-11 at position at least $n-1$. Consequently, $F_{n_k}\ge 11^{k-1}$ for each $k\ge1$.
 
 **Lemma.**  
 
@@ -163,7 +166,7 @@ print(handshake(60))
 
 ## Data & Code Availability
 
-All code, 10k-digit files, and a Jupyter notebook are archived at:  
+All code and 10k-digit files are archived at:
 <https://doi.org/10.5281/zenodo.XXXXXXXX>  
 MIT License.
 

@@ -1,13 +1,5 @@
-"""
-hc_gauge_running.py
-Two-loop SM running with a Handshake–Constant unification scale
-    Λ_U = M_P * exp(-HC).
-Optional: add one light colour triplet at 2 TeV plus extended analyses:
-  • gauge convergence plot
-  • placeholder two-loop matching at MZ
-  • Yukawa + Higgs RGE
-  • toy proton-decay estimate
-"""
+# hc_gauge_running.py
+# Two-loop Standard Model gauge coupling running with Handshake-Constant unification
 import numpy as np
 import matplotlib.pyplot as plt
 from math import exp, log
@@ -49,13 +41,17 @@ def run_RGE(α0, μ0, μ1, b_vec, steps=100000):
     return α
 
 
-def run_with_threshold(α0, add_triplet=False):
+def run_with_threshold(α0, add_triplet=False, steps=100000):
+    """Run RGE split at threshold with adjustable steps per segment."""
+    t0, t_thr, t1 = log(Λ_U), log(Λ_thr), log(M_Z)
     if not add_triplet:
-        return run_RGE(α0, Λ_U, M_Z, b)
-    # split at Λ_thr with modified one-loop b_vec
-    α_mid = run_RGE(α0, Λ_U, Λ_thr, b)
+        return run_RGE(α0, Λ_U, M_Z, b_vec=b, steps=steps)
+    total = t1 - t0
+    n1 = max(1, int(steps * (t_thr - t0) / total))
+    n2 = max(1, steps - n1)
+    α_mid = run_RGE(α0, Λ_U, Λ_thr, b_vec=b, steps=n1)
     b_shift = b + np.array([1/10, 1/6, 1])
-    α_low  = run_RGE(α_mid, Λ_thr, M_Z, b_shift)
+    α_low  = run_RGE(α_mid, Λ_thr, M_Z, b_vec=b_shift, steps=n2)
     return α_low
 
 
@@ -169,10 +165,10 @@ def compute_proton_decay_tau(M_tri, αU):
     return τ_s / (3600*24*365)
 
 
-def main():
+def main(steps=100000, add_triplet=False):
     αU_vec, αU = tune_alpha_U()
-    α_pure = run_with_threshold(αU_vec, False)
-    α_trip  = run_with_threshold(αU_vec, True)
+    α_pure = run_with_threshold(αU_vec, add_triplet=False, steps=steps)
+    α_trip  = run_with_threshold(αU_vec, add_triplet=add_triplet, steps=steps)
 
     print(f"HC     = {HC}")
     print(f"Λ_U    = {Λ_U:.2e} eV  (single e^(-HC))")
@@ -206,5 +202,10 @@ def main():
     print(f"Toy proton lifetime for 2 TeV triplet: τ_p ≃ {τ_p:.2e} years")
 
 if __name__ == '__main__':
-    main()
+    import argparse
+    parser = argparse.ArgumentParser(description='Gauge coupling RGE runner')
+    parser.add_argument('--steps', type=int, default=100000, help='RGE integration steps')
+    parser.add_argument('--add-triplet', action='store_true', help='Include triplet threshold')
+    args = parser.parse_args()
+    main(steps=args.steps, add_triplet=args.add_triplet)
 </file_content>
