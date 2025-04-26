@@ -33,6 +33,7 @@ This package provides minimal, focused materials for peer review of Unstandard L
 - pandas
 - scipy
 - pytest
+- matplotlib
 
 Install dependencies via:
 
