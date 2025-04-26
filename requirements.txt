@@ -1,0 +1,5 @@
+# Peer Research Package Dependencies
+numpy>=1.20
+pandas>=1.2
+scipy>=1.6
+pytest>=6.0
